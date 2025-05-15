@@ -1,0 +1,18 @@
+.body{
+    font-family: Arial, sans-serif;
+    /* background-color: #f4f7fc; */
+    background-image: url('../../../assets/img/fondologin.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.h5{
+    color: #008000!important;
+}
+.bg-login-image{
+    background-image: url('../../../assets/img/fondo.jpg');
+}
