@@ -1,7 +1,7 @@
 .body{
     font-family: Arial, sans-serif;
-    /* background-color: #f4f7fc; */
-    background-image: url('../../../assets/img/fondologin.jpg');
+    background-color: #f4f7fc;
+    /* background-image: url('../../../assets/img/fondologin.jpg'); */
     background-size: cover;
     background-position: center;
     display: flex;

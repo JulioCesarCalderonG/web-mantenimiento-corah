@@ -14,4 +14,7 @@ export class MenuService {
   getMenu(id:number):Observable<any>{
     return this.http.get(`${this.url}/${id}`);
   }
+  getListadoMenu():Observable<any>{
+    return this.http.get(this.url);
+  }
 }
