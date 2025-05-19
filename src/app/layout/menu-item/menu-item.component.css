@@ -12,3 +12,9 @@
 .indented{
     --mat-list-list-item-leading-icon-start-space:48px;
 }
+.titulo-menu{
+    font-size: 11px;
+}
+.titulo-submenu{
+    font-size: 11px;
+}

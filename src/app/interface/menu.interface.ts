@@ -5,14 +5,13 @@ export interface MenuResult {
 }
 
 export interface Menu {
-    idMenu:  number;
-    nomMenu: string;
-    titulo:  string;
-    subMenu: SubMenu[];
+    icon:     Icon;
+    label:    string;
+    route:    string;
+    subItem?: Menu[];
 }
 
-export interface SubMenu {
-    idSubmenu:  number;
-    rutaMenu:   string;
-    nombreMenu: string;
+export enum Icon {
+    Dashboard = "dashboard",
+    DeveloperDashboard = "developer_dashboard",
 }

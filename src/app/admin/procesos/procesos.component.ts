@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-procesos',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './procesos.component.html',
   styleUrl: './procesos.component.css'
 })

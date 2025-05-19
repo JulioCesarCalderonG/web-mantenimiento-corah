@@ -11,7 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { adminInterceptor } from './interceptor/admin.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -30,6 +30,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideAnimations(),
-    provideHttpClient(withInterceptors([adminInterceptor]))
+    provideHttpClient(
+      withInterceptors([adminInterceptor]),
+      withFetch()
+    )
   ]
 };

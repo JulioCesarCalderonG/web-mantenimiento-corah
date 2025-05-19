@@ -1,7 +1,6 @@
 <a
   mat-list-item
   class="menu-item"
-  [routerLink]="item().route"
   (click)="toggleNested()"
   routerLinkActive="selected-menu-item"
   #rla="routerLinkActive"
@@ -13,7 +12,7 @@
     >{{ item().icon }}</mat-icon
   >
   @if (!collapsed()) {
-  <span matListItemTitle>{{ item().label }}</span>
+  <span matListItemTitle class="titulo-menu">{{ item().label }}</span>
   } @if (item().subItem) {
   <span matListItemMeta>
     @if (nestedMenuOpen()) {
@@ -42,7 +41,7 @@
       >{{ subItem.icon }}</mat-icon
     >
     @if (!collapsed()) {
-    <span matListItemTitle>{{ subItem.label }}</span>
+    <span matListItemTitle class="titulo-submenu">{{ subItem.label }}</span>
     }
   </a>
   }

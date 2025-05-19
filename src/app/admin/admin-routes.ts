@@ -1,32 +1,26 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { LayoutComponent } from '../layout/layout.component';
 import { adminGuard } from '../guard/admin.guard';
-import { TipoBienesComponent } from './tipo-bienes/tipo-bienes.component';
-import { GruposComponent } from './grupos/grupos.component';
-import { PlanMantenimientoComponent } from './plan-mantenimiento/plan-mantenimiento.component';
-import { BienesMantenimientoComponent } from './bienes-mantenimiento/bienes-mantenimiento.component';
-import { SolicitudServicioComponent } from './solicitud-servicio/solicitud-servicio.component';
-import { HojaServicioComponent } from './hoja-servicio/hoja-servicio.component';
+import { SolicitudServicioComponent } from './procesos/solicitud-servicio/solicitud-servicio.component';
+import { HojaServicioComponent } from './procesos/hoja-servicio/hoja-servicio.component';
 import { reportesRoutes } from './reportes/reporte-routes';
+import { tableroRoutes } from './tablero-control/tablero-routes';
+import { mantenimientoRoutes } from './mantenimiento/mantenimiento-routes';
+import { procesoRoutes } from './procesos/procesos-routes';
 
 
 export const adminRoutes: Routes = [
-    { 
-        path: 'admin', 
+    {
+        path: 'admin',
         component: LayoutComponent,
-        children:[
-            {path:'panel-control',component:DashboardComponent},
-            {path:'tipos-de-bienes',component:TipoBienesComponent},
-            {path:'grupos',component:GruposComponent},
-            {path:'plan-mantenimiento',component:PlanMantenimientoComponent},
-            {path:'bienes-mantto',component:BienesMantenimientoComponent},
-            {path:'solicitud-servicio',component:SolicitudServicioComponent},
-            {path:'hoja-de-servicio',component:HojaServicioComponent},
+        children: [
+            ...tableroRoutes,
+            ...mantenimientoRoutes,
+            ...procesoRoutes,
             ...reportesRoutes,
-            { path: '', redirectTo: 'panel-control', pathMatch: 'full' }
+            { path: '', redirectTo: 'tablero-control/panel-control', pathMatch: 'full' }
         ],
-        //canActivateChild:[adminGuard]
+        canActivateChild: [adminGuard]
     },
 ];
 

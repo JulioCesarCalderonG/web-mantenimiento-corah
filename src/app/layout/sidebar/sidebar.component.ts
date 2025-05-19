@@ -36,55 +36,12 @@ export class SidebarComponent implements OnInit {
   }
   idMenu: number = 13;
   listMenu: Menu[] = [];
-  menuItems = signal<MenuIntem[]>([
-    {
-      icon: 'dashboard',
-      label: 'Dashboard',
-      route: 'panel-control',
-    },
-    {
-      icon: 'dashboard',
-      label: 'Mantenimiento',
-      route: 'tipos-de-bienes',
-    },
-    {
-      icon: 'dashboard',
-      label: 'Grupos',
-      route: 'grupos',
-    },
-    {
-      icon: 'dashboard',
-      label: 'Reportes',
-      route: 'reportes',
-      subItem: [
-        {
-          icon: 'dashboard',
-          label: 'Incidencias',
-          route: 'incidencias',
-        },
-        {
-          icon: 'dashboard',
-          label: 'Operatividad',
-          route: 'operatividad',
-        },
-        {
-          icon: 'dashboard',
-          label: 'Ocurrencias',
-          route: 'ocurrencias',
-        },
-        {
-          icon: 'dashboard',
-          label: 'Actividades',
-          route: 'actividades',
-        }
-      ],
-    },
-  ]);
+  menuItems = signal<MenuIntem[]>([]);
 
   profilePicSize = computed(() => (this.sidenavCollapsed() ? '32' : '100'));
   constructor(private menuSer: MenuService) {}
   ngOnInit(): void {
-    //this.obtenerListadoMenu();
+    this.obtenerListadoMenu();
   }
 
   mostrarMenu() {
@@ -99,9 +56,10 @@ export class SidebarComponent implements OnInit {
   }
   obtenerListadoMenu() {
     this.menuSer.getListadoMenu().subscribe({
-      next: (data: MenuResult) => {
-        console.log(data);
-        this.listMenu = data.menu;
+      next: (data:MenuResult) => {
+        //console.log(data);
+        //this.listMenu = data.menu;
+        this.menuItems.set(data.menu);
       },
       error: (error) => {
         console.log(error);
