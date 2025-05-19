@@ -4,7 +4,7 @@ mat-toolbar{
     /* background-color: #939C45; */
 }
 .titulo{
-    color: aliceblue;
+    /* color: aliceblue; */
 }
 .content{
     padding: 24px;
@@ -13,7 +13,7 @@ mat-sidenav-container{
     height: calc(100vh - 64px);
 }
 mat-icon{
-    color: aliceblue;
+    /* color: aliceblue; */
 }
 
 mat-sidenav,
