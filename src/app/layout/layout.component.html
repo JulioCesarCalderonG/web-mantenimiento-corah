@@ -1,12 +1,28 @@
-<div id="wrapper">
-    <app-sidebar></app-sidebar>
-    <div id="content-wrapper" class="d-flex flex-column">
-        <div id="content">
-            <app-header></app-header>
-            <div class="container-fluid">
-                <router-outlet></router-outlet>
-            </div>
-        </div>
-        <app-footer></app-footer>
-    </div>
-</div>
+<!-- <mat-toolbar class="mat-elevation-z3">
+    <button mat-icon-button (click)="collapsed.set(!collapsed())">
+        <mat-icon>menu</mat-icon>
+    </button>
+</mat-toolbar> -->
+<mat-toolbar class="mat-elevation-z3" color="primary">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
+        (click)="collapsed.set(!collapsed())">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span class="titulo">Mantenimiento</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" [matMenuTriggerFor]="menu">
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item>Opción 1</button>
+        <button mat-menu-item>Opción 2</button>
+    </mat-menu>
+</mat-toolbar>
+<mat-sidenav-container>
+    <mat-sidenav opened mode="side" [style.width]="sidenavWidth()">
+        <app-sidebar [collapsed]="collapsed()"></app-sidebar>
+    </mat-sidenav>
+    <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
