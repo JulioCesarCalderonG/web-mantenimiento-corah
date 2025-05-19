@@ -1,20 +1,119 @@
 <mat-card appearance="outlined">
   <mat-card-content>
-       <div class="flex flex-wrap -mx-4">
+    <div class="flex flex-wrap -mx-4">
       <div class="w-full lg:w-12/12 px-4">
-        <div class="bg-gray-100 p-4 rounded">Columna 1</div>
+        <form action="" [formGroup]="formReporte">
+          <div class="mb-3">
+          <label for="dateOfBirth">Fecha de Inicio</label>
+          <div class="input-group mb-3">
+            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d="ngbDatepicker" formControlName="fechaInicio" />
+            <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"><i class="fa fa-calendar-alt"></i></button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="dateOfBirth">Fecha Fin</label>
+          <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #e="ngbDatepicker" formControlName="fechaFin" />
+            <button class="btn btn-outline-secondary bi bi-calendar3" (click)="e.toggle()" type="button"><i class="far fa-calendar-alt"></i></button>
+          </div>
+        </div>
+        </form>
       </div>
     </div>
-    <div class="flex flex-wrap -mx-4 botones">
-       <button
-          class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-          Filtrar
-        </button>
-        <button
-          class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-          Generar Reporte
-        </button>
+    <div class="flex flex-wrap -mx-4 botones" >
+      <button type="button" class="btn btn-outline-primary filtrar" aria-controls="collapseExample" (click)=" getMostrarListado()">
+        <i class="fa fa-search"></i>
+        <span>Filtrar</span>
+      </button>
+      <button type="button" class="btn btn-outline-primary" aria-controls="collapseExample">
+        <i class="fa fa-file-pdf"></i>
+        Generar Reporte
+      </button>
     </div>
- 
+      <div class="example-container" tabindex="0">
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="sede">
+      <th mat-header-cell *matHeaderCellDef> Sede </th>
+      <td mat-cell *matCellDef="let element"> {{element.sede}} </td>
+    </ng-container>
+    <!-- Position Column -->
+    <ng-container matColumnDef="numero">
+      <th mat-header-cell *matHeaderCellDef> Numero </th>
+      <td mat-cell *matCellDef="let element"> {{element.correlativo}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="especialidad">
+      <th mat-header-cell *matHeaderCellDef> Especialidad </th>
+      <td mat-cell *matCellDef="let element"> {{element.especialidad}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef> Fecha </th>
+      <td mat-cell *matCellDef="let element"> {{element.fechaCreacion}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="tipo">
+      <th mat-header-cell *matHeaderCellDef> Tipo </th>
+      <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="descripcion">
+      <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+      <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="codigo">
+      <th mat-header-cell *matHeaderCellDef> Codigo </th>
+      <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="bien">
+      <th mat-header-cell *matHeaderCellDef> Bien </th>
+      <td mat-cell *matCellDef="let element"> {{element.tipo2}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="placa">
+      <th mat-header-cell *matHeaderCellDef> Placa </th>
+      <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="ano">
+      <th mat-header-cell *matHeaderCellDef> Año </th>
+      <td mat-cell *matCellDef="let element"> {{element.anio}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="ubicacion">
+      <th mat-header-cell *matHeaderCellDef> Ubicacion </th>
+      <td mat-cell *matCellDef="let element"> {{element.ubicacion}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="direccion">
+      <th mat-header-cell *matHeaderCellDef> Direccion </th>
+      <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  
+</div>
+<mat-paginator [pageSizeOptions]="[10, 20, 30]"
+                  [pageSize]="10"
+                 showFirstLastButtons
+                 aria-label="Select page of periodic elements">
+  </mat-paginator>
   </mat-card-content>
 </mat-card>
