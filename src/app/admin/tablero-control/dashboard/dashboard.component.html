@@ -1,1 +1,9 @@
-<p>dashboard works!</p>
+ <div *ngIf="!pdfUrl">Cargando reporte...</div>
+ <ngx-extended-pdf-viewer
+    *ngIf="pdfUrl"
+     [src]="pdfUrl"
+     [height]="'auto'" 
+     [textLayer]="true"
+     [showHandToolButton]="true"
+     [filenameForDownload]="'Public Domain.pdf'"> 
+</ngx-extended-pdf-viewer>

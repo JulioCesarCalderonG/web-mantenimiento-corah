@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ReporteTrabajoDiarioService } from '../../../services/reporte-trabajo-diario.service';
 import {
@@ -13,20 +13,46 @@ import { MatIconModule } from '@angular/material/icon';
 import {
   NgbAlertModule,
   NgbDatepickerModule,
-  NgbDateStruct,
+  NgbDateStruct,NgbModal, NgbModalConfig
 } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
 import {
   ResultTrabajoDiario,
   TablaDiario,
 } from '../../../interface/result.trabajo.diario.interface';
+import { HttpClient } from '@angular/common/http';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { CommonModule } from '@angular/common';
+import { formatDate, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
+registerLocaleData(localeEs);
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 
 @Component({
   selector: 'app-r-trabajo-diario',
   standalone: true,
   imports: [
+    CommonModule,
     MatCardModule,
     MatIconModule,
     NgbDatepickerModule,
@@ -35,6 +61,17 @@ import {
     ReactiveFormsModule,
     MatTableModule,
     MatPaginatorModule,
+    MatDialogModule,
+    NgxExtendedPdfViewerModule,
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-PE' },
   ],
   templateUrl: './r-trabajo-diario.component.html',
   styleUrl: './r-trabajo-diario.component.css',
@@ -59,16 +96,26 @@ export class RTrabajoDiarioComponent implements OnInit, AfterViewInit {
     'direccion',
   ];
   dataSource = new MatTableDataSource<TablaDiario>([]);
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  //Generar Reporte
+  pdfUrl?: string;
+  //FECHA ACTUAL
+  fecha = formatDate(new Date(), 'dd/MM/yyyy', 'es');
+  private http = inject(HttpClient);
   constructor(
     private repoTrabDiario: ReporteTrabajoDiarioService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    config: NgbModalConfig,
+		private modalService: NgbModal,
   ) {
     this.formReporte = this.fb.group({
-      fechaInicio: ['', Validators.required],
-      fechaFin: ['', Validators.required],
+      fechaInicio: [new Date(), Validators.required],
+      fechaFin: [new Date(), Validators.required],
     });
+    console.log(this.fecha);
+    
+    config.backdrop = 'static';
+		config.keyboard = false;
   }
   ngOnInit(): void {
     //this.getMostrarListado();
@@ -77,7 +124,9 @@ export class RTrabajoDiarioComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
 
   getMostrarListado() {
-    if (
+    console.log(formatDate(this.formReporte.get('fechaInicio')?.value, 'dd/MM/yyyy', 'es'));
+    console.log(formatDate(this.formReporte.get('fechaFin')?.value, 'dd/MM/yyyy', 'es'));
+    /* if (
       this.formReporte.get('fechaInicio')?.value == '' ||
       this.formReporte.get('fechaFin')?.value == ''
     ) {
@@ -108,6 +157,23 @@ export class RTrabajoDiarioComponent implements OnInit, AfterViewInit {
           console.log(error);
         },
       });
-    }
+    } */
+  }
+  generarReporte(content:any){
+    this.http
+      .get(
+        'https://backendmuni.gongalsoft.com/api/politicaprivacidad/poderjudicial',
+        { responseType: 'blob' }
+      )
+      .subscribe({
+        next: blob => {
+          const url = URL.createObjectURL(blob);
+          this.pdfUrl = url;
+          this.modalService.open(content,{size:'xl'});
+        },
+        error: err => {
+          console.error('Error al obtener el PDF:', err);
+        }
+      });
   }
 }

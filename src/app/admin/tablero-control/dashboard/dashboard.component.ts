@@ -1,12 +1,35 @@
-import { Component } from '@angular/core';
-
+import { Component, inject, OnInit } from '@angular/core';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-dashboard',
   standalone:true,
-  imports: [],
+  imports: [CommonModule,NgxExtendedPdfViewerModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
 
+   pdfUrl?: string;
+
+  private http = inject(HttpClient);
+
+  ngOnInit() {
+    this.http
+      .get(
+        'https://backendmuni.gongalsoft.com/api/politicaprivacidad/poderjudicial',
+        { responseType: 'blob' }
+      )
+      .subscribe({
+        next: blob => {
+          const url = URL.createObjectURL(blob);
+          this.pdfUrl = url;
+        },
+        error: err => {
+          console.error('Error al obtener el PDF:', err);
+        }
+      });
+  }
 }
