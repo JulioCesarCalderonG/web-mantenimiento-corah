@@ -1,0 +1,46 @@
+.col-lg-4 label{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.col-lg-3{
+    display: flex;
+    align-items: center;
+}
+
+.example-container {
+    height: 500px;
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+    scrollbar-color: rgb(150, 150, 150) #fffafa;
+    scrollbar-width: thin;
+  }
+table {
+  width: 100%;
+}
+td{
+    font-size: 11px;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fafafa;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: #ccc;
+}
+
+.demo-row-is-clicked {
+  font-weight: bold;
+}

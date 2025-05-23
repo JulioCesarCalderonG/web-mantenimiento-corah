@@ -1,13 +1,21 @@
 .body{
     font-family: Arial, sans-serif;
-    background-color: #f4f7fc;
-    /* background-image: url('../../../assets/img/fondologin.jpg'); */
+    /* background-color: #f4f7fc; */
+    background-image: url('../../../assets/img/fondo.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+}
+.principal{
+    background-color: #fff;
+    width: 400px;
+    height: 500px;
+    padding: 40px;
+    border-radius: 10px;
+     box-shadow: 5px 5px 15px;
 }
 
 .h5{

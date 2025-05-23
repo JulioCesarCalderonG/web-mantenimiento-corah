@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    backendURL: 'http://localhost:7001/WebMantenimiento',
+    backendURL: 'http://192.168.1.90:7001/WebMantenimiento',
 };

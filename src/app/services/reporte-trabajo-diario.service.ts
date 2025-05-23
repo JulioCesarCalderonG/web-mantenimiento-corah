@@ -13,4 +13,9 @@ export class ReporteTrabajoDiarioService {
   getListadoReporte(data:FormReporteDiario):Observable<any>{
     return this.http.post(this.url,data)
   }
+  generarReporte(body: FormReporteDiario): Observable<Blob> {
+    return this.http.post(`${this.url}/sede`, body, {
+      responseType: 'blob'
+    });
+  }
 }

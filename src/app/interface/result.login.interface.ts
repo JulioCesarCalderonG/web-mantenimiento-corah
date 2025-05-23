@@ -1,6 +1,7 @@
 export interface ResultLogin {
     ok:      boolean;
     token:   string;
+    msg:     string;
     usuario: Usuario;
 }
 

@@ -1,1 +1,165 @@
-<p>hoja-servicio works!</p>
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <form [formGroup]="formHoja">
+      <div class="container row">
+        <div class="col-lg-4 row">
+          <div class="col-lg-3">
+            <label for="">Año: </label>
+          </div>
+          <div class="col-lg-9">
+            <select class="form-select" aria-label="Default select example" formControlName="anio"  (change)="listarHojaServicio()">
+              <option *ngFor="let item of years" value="{{ item }}">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-4 row">
+          <div class="col-lg-3">
+            <label for="">Mes: </label>
+          </div>
+          <div class="col-lg-9">
+            <select class="form-select" aria-label="Default select example" formControlName="mes" (change)="listarHojaServicio()">
+              <option *ngFor="let item of meses" value="{{ item.valor }}">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-4 row">
+          <div class="col-lg-3">
+            <label for="">Estado: </label>
+          </div>
+          <div class="col-lg-9">
+            <select class="form-select" aria-label="Default select example" formControlName="estado"  (change)="listarHojaServicio()">
+              <option *ngFor="let item of estado" value="{{ item.valor }}">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="mt-5">
+        <div class="mb-3">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar..." #input class="form-control">
+        </div>
+    </div>
+    <div class="example-container mt-2" tabindex="0">
+      <table mat-table [dataSource]="dataSource">
+        <!-- Position Column -->
+        <ng-container matColumnDef="numero">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">NUMERO</th>
+          <td mat-cell *matCellDef="let element">{{ element.numero }}</td>
+        </ng-container>
+        <!-- Position Column -->
+        <ng-container matColumnDef="fechaemision">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">FECHA EMISION</th>
+          <td mat-cell *matCellDef="let element">{{ convertirString(element.fechaInicio) }}</td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="solicitante">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">SOLICITANTE</th>
+          <td mat-cell *matCellDef="let element">{{ element.solicitante }}</td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">TIPO</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.tipo }}
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="motivo">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">MOTIVO</th>
+          <td mat-cell *matCellDef="let element">{{ element.motivo }}</td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">COD. PATR.</th>
+          <td mat-cell *matCellDef="let element">{{ element.codigoPatrimonial }}</td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="placa">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">PLACA</th>
+          <td mat-cell *matCellDef="let element">{{ element.placa }}</td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="direccion">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">DIRECCION</th>
+          <td mat-cell *matCellDef="let element">{{ element.direccion }}</td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">ESTADO</th>
+          <td mat-cell *matCellDef="let element">{{ cambiarEstado(element.estado) }}</td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="fechaultima">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">FECHA ULT. ACTUAL.</th>
+          <td mat-cell *matCellDef="let element">{{ convertirString(element.fechaActualizacion) }}</td>
+        </ng-container>
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="acciones" class="text-center">
+          <th mat-header-cell *matHeaderCellDef class="sticky-header">ACCIONES</th>
+          <td mat-cell *matCellDef="let element">
+             <button class="btn btn-outline-primary" (click)="generarReporte(element.id, content)"> <i class="fa fa-file-pdf"></i> </button>
+          </td>
+         <!-- 
+          <td mat-cell *matCellDef="let element">{{ element.fechaActualizacion }}</td> -->
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator
+      [pageSizeOptions]="[30, 50, 70]"
+      [pageSize]="30"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Reporte</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="!pdfUrl">Cargando reporte...</div>
+    <ngx-extended-pdf-viewer
+      *ngIf="pdfUrl"
+      [src]="pdfUrl"
+      [height]="'auto'"
+      [textLayer]="true"
+      [showHandToolButton]="true"
+      [filenameForDownload]="'hoja-servicio.pdf'"
+    >
+    </ngx-extended-pdf-viewer>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="c('Save click')"
+    >
+      Cerrar
+    </button>
+  </div>
+</ng-template>

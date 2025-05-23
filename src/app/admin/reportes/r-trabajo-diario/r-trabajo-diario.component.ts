@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ReporteTrabajoDiarioService } from '../../../services/reporte-trabajo-diario.service';
 import {
@@ -13,7 +19,9 @@ import { MatIconModule } from '@angular/material/icon';
 import {
   NgbAlertModule,
   NgbDatepickerModule,
-  NgbDateStruct,NgbModal, NgbModalConfig
+  NgbDateStruct,
+  NgbModal,
+  NgbModalConfig,
 } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -29,10 +37,19 @@ import { CommonModule } from '@angular/common';
 import { formatDate, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import { MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {
+  MatNativeDateModule,
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import {
+  MatMomentDateModule,
+  MomentDateAdapter,
+} from '@angular/material-moment-adapter';
+import { closeAlert, loadData } from '../../../alert/load';
 registerLocaleData(localeEs);
 
 export const MY_DATE_FORMATS = {
@@ -46,7 +63,6 @@ export const MY_DATE_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-
 
 @Component({
   selector: 'app-r-trabajo-diario',
@@ -63,13 +79,17 @@ export const MY_DATE_FORMATS = {
     MatPaginatorModule,
     MatDialogModule,
     NgxExtendedPdfViewerModule,
-    MatFormFieldModule, 
-    MatInputModule, 
+    MatFormFieldModule,
+    MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     { provide: MAT_DATE_LOCALE, useValue: 'es-PE' },
   ],
@@ -77,6 +97,7 @@ export const MY_DATE_FORMATS = {
   styleUrl: './r-trabajo-diario.component.css',
 })
 export class RTrabajoDiarioComponent implements OnInit, AfterViewInit {
+  carga: boolean = true;
   model?: NgbDateStruct;
   formReporte: FormGroup;
   listTrabajoDiario: TablaDiario[] = [];
@@ -106,74 +127,118 @@ export class RTrabajoDiarioComponent implements OnInit, AfterViewInit {
     private repoTrabDiario: ReporteTrabajoDiarioService,
     private fb: FormBuilder,
     config: NgbModalConfig,
-		private modalService: NgbModal,
+    private modalService: NgbModal
   ) {
     this.formReporte = this.fb.group({
       fechaInicio: [new Date(), Validators.required],
       fechaFin: [new Date(), Validators.required],
     });
-    console.log(this.fecha);
-    
     config.backdrop = 'static';
-		config.keyboard = false;
+    config.keyboard = false;
   }
   ngOnInit(): void {
-    //this.getMostrarListado();
+    this.getMostrarListado();
     //this.dataSource.paginator = this.paginator!;
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   getMostrarListado() {
-    console.log(formatDate(this.formReporte.get('fechaInicio')?.value, 'dd/MM/yyyy', 'es'));
-    console.log(formatDate(this.formReporte.get('fechaFin')?.value, 'dd/MM/yyyy', 'es'));
-    /* if (
-      this.formReporte.get('fechaInicio')?.value == '' ||
-      this.formReporte.get('fechaFin')?.value == ''
-    ) {
-      alert('Los campos son obligatorios');
-    }
     if (
       this.formReporte.get('fechaInicio')?.value >
       this.formReporte.get('fechaFin')?.value
     ) {
       alert('La fecha fin no puede ser menor a la de inicio');
     } else {
+      this.carga = false;
+      if (!this.carga) {
+        loadData('Cargando Informacion', 'Se esta cargando la informacion de los trabajos diarios');
+      }
       const data: FormReporteDiario = {
-        fechaInicio: `${this.formReporte.get('fechaInicio')?.value.day}/${
-          this.formReporte.get('fechaInicio')?.value.month
-        }/${this.formReporte.get('fechaInicio')?.value.year}`,
-        fechaFin: `${this.formReporte.get('fechaFin')?.value.day}/${
-          this.formReporte.get('fechaFin')?.value.month
-        }/${this.formReporte.get('fechaFin')?.value.year}`,
+        fechaInicio: `${formatDate(
+          this.formReporte.get('fechaInicio')?.value,
+          'dd/MM/yyyy',
+          'es'
+        )}`,
+        fechaFin: `${formatDate(
+          this.formReporte.get('fechaFin')?.value,
+          'dd/MM/yyyy',
+          'es'
+        )}`,
       };
       this.repoTrabDiario.getListadoReporte(data).subscribe({
         next: (data: ResultTrabajoDiario) => {
           this.listTrabajoDiario = data.tablaDiario;
-          console.log(this.listTrabajoDiario);
           this.dataSource.data = data.tablaDiario;
           this.dataSource.paginator = this.paginator;
+          this.carga = true;
+          setTimeout(() => {
+            if (this.carga) {
+              closeAlert();
+            }
+          }, 1000);
         },
         error: (error) => {
           console.log(error);
+          this.carga = true;
+          setTimeout(() => {
+            if (this.carga) {
+              closeAlert();
+            }
+          }, 1000);
         },
       });
-    } */
+    }
   }
-  generarReporte(content:any){
-    this.http
-      .get(
-        'https://backendmuni.gongalsoft.com/api/politicaprivacidad/poderjudicial',
-        { responseType: 'blob' }
-      )
-      .subscribe({
-        next: blob => {
-          const url = URL.createObjectURL(blob);
-          this.pdfUrl = url;
-          this.modalService.open(content,{size:'xl'});
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  generarReporte(content: any) {
+    if (
+      this.formReporte.get('fechaInicio')?.value >
+      this.formReporte.get('fechaFin')?.value
+    ) {
+      alert('La fecha fin no puede ser menor a la de inicio');
+    } else {
+      this.carga = false;
+      if (!this.carga) {
+        loadData('Generando Reporte', 'Se esta generando el reporte, espere por favor!!!');
+      }
+      const data: FormReporteDiario = {
+        fechaInicio: `${formatDate(
+          this.formReporte.get('fechaInicio')?.value,
+          'dd/MM/yyyy',
+          'es'
+        )}`,
+        fechaFin: `${formatDate(
+          this.formReporte.get('fechaFin')?.value,
+          'dd/MM/yyyy',
+          'es'
+        )}`,
+      };
+
+      this.repoTrabDiario.generarReporte(data).subscribe({
+        next: (blob) => {
+          this.carga = true;
+          setTimeout(() => {
+            const url = URL.createObjectURL(blob);
+            this.pdfUrl = url;
+            this.modalService.open(content, { size: 'xl' });
+            closeAlert();
+          }, 1000);
         },
-        error: err => {
+        error: (err) => {
           console.error('Error al obtener el PDF:', err);
-        }
+          this.carga = true;
+          setTimeout(() => {
+            if (this.carga) {
+              closeAlert();
+            }
+          }, 1000);
+        },
       });
+
+    }
+
   }
 }

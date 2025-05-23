@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { adminInterceptor } from './interceptor/admin.interceptor';
-
+import { ToastrModule } from 'ngx-toastr';
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(
@@ -24,7 +24,8 @@ export const appConfig: ApplicationConfig = {
       MatListModule,
       MatButtonModule,
       MatInputModule,
-      MatFormFieldModule
+      MatFormFieldModule,
+      ToastrModule.forRoot()
     ),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),

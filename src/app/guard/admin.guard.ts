@@ -3,41 +3,40 @@ import { ActivatedRouteSnapshot, CanActivateChildFn, CanActivateFn, Router, Rout
 import { AuthAdminService } from '../services/auth-admin.service';
 import { jwtDecode } from "jwt-decode";
 
-@Injectable ({
+@Injectable({
   providedIn: 'root',
 })
 class PermissionsService {
   constructor(private router: Router, private authService: AuthAdminService) {}
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    if (this.authService.getToken() !== null) {
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    const token = this.authService.getToken();
+    if (token) {
       const dataDecode: any = this.decodeToken();
       const date = new Date();
-      // Comprobar que no esta caducado el token
-      
-      if (dataDecode.exp < date.getTime() / 1000) {
+
+      if (!dataDecode || !dataDecode.exp || dataDecode.exp < date.getTime() / 1000) {
         return this.redirect();
       }
       return true;
     }
     return this.redirect();
-    /* if (this.authService.loggedIn()) {
-    return true;
   }
-  this.router.navigate(['/login']);
-  return false; */
-  }
+
   redirect() {
     this.router.navigate(['/auth/admin']);
     return false;
   }
+
   decodeToken() {
-    return jwtDecode(`${this.authService.getToken()}`);
+    try {
+      return jwtDecode(`${this.authService.getToken()}`);
+    } catch {
+      return null;
+    }
   }
 }
+
 export const adminGuard: CanActivateChildFn = (route, state) => {
   return inject(PermissionsService).canActivate(route, state);
 };
